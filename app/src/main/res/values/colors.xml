@@ -2,4 +2,27 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- FloraStock Theme Colors -->
+    <color name="primary">#1B5E20</color>
+    <color name="onPrimary">#FFFFFF</color>
+    <color name="primaryContainer">#C8E6C9</color>
+    <color name="onPrimaryContainer">#002107</color>
+
+    <color name="secondary">#2E7D32</color>
+    <color name="onSecondary">#FFFFFF</color>
+
+    <color name="background">#F5F5F5</color>
+    <color name="onBackground">#1B1B1B</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="onSurface">#1B1B1B</color>
+
+    <!-- Status & Alerts -->
+    <color name="status_fresh">#4CAF50</color>
+    <color name="status_warning">#FFC107</color>
+    <color name="status_danger">#F44336</color>
+    <color name="status_info">#2196F3</color>
+
+    <color name="text_secondary">#757575</color>
+    <color name="divider">#EEEEEE</color>
 </resources>

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "612598782597",
+    "project_id": "quan-ly-kho-hoa",
+    "storage_bucket": "quan-ly-kho-hoa.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:612598782597:android:b6996d107f9d08528567ec",
+        "android_client_info": {
+          "package_name": "com.example.quanlykho"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdvovnUuijFScJHjkprJP0873lCUAZ5xM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

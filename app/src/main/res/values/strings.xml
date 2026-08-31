@@ -1,3 +1,9 @@
 <resources>
-    <string name="app_name">QuanLyKho</string>
+    <string name="app_name">Quản Lý Kho Hoa</string>
+    <string name="title_dashboard">Tổng quan</string>
+    <string name="title_inventory">Kho hoa</string>
+    <string name="title_transactions">Báo cáo</string>
+    <string name="title_settings">Cài đặt</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
