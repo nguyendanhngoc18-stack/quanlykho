@@ -232,68 +232,7 @@
                     android:orientation="vertical"
                     android:padding="8dp">
 
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="12dp">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="HD00892 - Khách lẻ"
-                            android:textStyle="bold"
-                            android:textSize="14sp"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:text="1.250.000 đ"
-                            android:textColor="@color/primary"
-                            android:textStyle="bold"/>
-                    </RelativeLayout>
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/divider"/>
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="12dp">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="HD00891 - Shop Hoa Tươi"
-                            android:textStyle="bold"
-                            android:textSize="14sp"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:text="4.800.000 đ"
-                            android:textColor="@color/primary"
-                            android:textStyle="bold"/>
-                    </RelativeLayout>
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/divider"/>
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="12dp">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="HD00890 - Chị Lan"
-                            android:textStyle="bold"
-                            android:textSize="14sp"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:text="850.000 đ"
-                            android:textColor="@color/primary"
-                            android:textStyle="bold"/>
-                    </RelativeLayout>
+                    <!-- Các item sẽ được thêm động từ Java code -->
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>

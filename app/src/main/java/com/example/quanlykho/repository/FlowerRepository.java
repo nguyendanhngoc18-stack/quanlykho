@@ -11,8 +11,44 @@ import com.google.firebase.firestore.WriteBatch;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.quanlykho.model.PriceHistory;
+
 public class FlowerRepository {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+    public void updateFlowerPrice(Flower flower, PriceHistory history, OnCompleteListener listener) {
+        WriteBatch batch = db.batch();
+        
+        batch.update(db.collection("flowers").document(flower.getId()), 
+                "buyPrice", flower.getBuyPrice(),
+                "sellPrice", flower.getSellPrice());
+        
+        String historyId = db.collection("price_histories").document().getId();
+        history.setId(historyId);
+        batch.set(db.collection("price_histories").document(historyId), history);
+        
+        batch.commit()
+                .addOnSuccessListener(aVoid -> listener.onComplete(true, null))
+                .addOnFailureListener(e -> listener.onComplete(false, e.getMessage()));
+    }
+
+    public MutableLiveData<List<PriceHistory>> getPriceHistory(String flowerId) {
+        MutableLiveData<List<PriceHistory>> liveData = new MutableLiveData<>();
+        db.collection("price_histories")
+                .whereEqualTo("flowerId", flowerId)
+                .orderBy("timestamp", com.google.firebase.firestore.Query.Direction.DESCENDING)
+                .addSnapshotListener((value, error) -> {
+                    if (error != null) return;
+                    if (value != null) {
+                        List<PriceHistory> list = new ArrayList<>();
+                        for (QueryDocumentSnapshot doc : value) {
+                            list.add(doc.toObject(PriceHistory.class));
+                        }
+                        liveData.setValue(list);
+                    }
+                });
+        return liveData;
+    }
 
     public MutableLiveData<List<Flower>> getFlowersFromFirestore() {
         MutableLiveData<List<Flower>> liveData = new MutableLiveData<>();
@@ -107,6 +143,13 @@ public class FlowerRepository {
                     }
                 });
         return liveData;
+    }
+
+    public void updateInvoicePaymentStatus(String invoiceId, boolean isPaid, OnCompleteListener listener) {
+        db.collection("invoices").document(invoiceId)
+                .update("paid", isPaid)
+                .addOnSuccessListener(aVoid -> listener.onComplete(true, null))
+                .addOnFailureListener(e -> listener.onComplete(false, e.getMessage()));
     }
 
     public MutableLiveData<List<Transaction>> getTransactions() {

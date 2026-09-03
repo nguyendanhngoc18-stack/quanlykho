@@ -8,9 +8,19 @@ import com.example.quanlykho.model.Transaction;
 import com.example.quanlykho.repository.FlowerRepository;
 import java.util.List;
 
+import com.example.quanlykho.model.PriceHistory;
+
 public class FlowerViewModel extends ViewModel {
     private FlowerRepository repository = new FlowerRepository();
     private LiveData<List<Flower>> flowerList;
+
+    public void updateFlowerPrice(Flower flower, PriceHistory history, FlowerRepository.OnCompleteListener listener) {
+        repository.updateFlowerPrice(flower, history, listener);
+    }
+
+    public LiveData<List<PriceHistory>> getPriceHistory(String flowerId) {
+        return repository.getPriceHistory(flowerId);
+    }
 
     public LiveData<List<Flower>> getFlowers() {
         if (flowerList == null) {
@@ -37,6 +47,10 @@ public class FlowerViewModel extends ViewModel {
 
     public void addInvoice(Invoice invoice, FlowerRepository.OnCompleteListener listener) {
         repository.addInvoice(invoice, listener);
+    }
+
+    public void updateInvoicePaymentStatus(String invoiceId, boolean isPaid, FlowerRepository.OnCompleteListener listener) {
+        repository.updateInvoicePaymentStatus(invoiceId, isPaid, listener);
     }
 
     public LiveData<List<Invoice>> getInvoices() {

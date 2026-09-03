@@ -100,7 +100,7 @@ public class AddFlowerActivity extends AppCompatActivity {
     }
 
     private void uploadImageAndSave(String name, String category, String location, String description, double buyPrice, double sellPrice, double quantity) {
-        Toast.makeText(this, "Đang tải ảnh lên...", Toast.LENGTH_SHORT).show();
+        binding.layoutProgress.setVisibility(android.view.View.VISIBLE);
         MediaManager.get().upload(imageUri)
                 .option("upload_preset", "KhoHoa")
                 .option("unsigned", true)
@@ -119,6 +119,7 @@ public class AddFlowerActivity extends AppCompatActivity {
 
             @Override
             public void onError(String requestId, ErrorInfo error) {
+                binding.layoutProgress.setVisibility(android.view.View.GONE);
                 Toast.makeText(AddFlowerActivity.this, "Tải ảnh thất bại: " + error.getDescription(), Toast.LENGTH_SHORT).show();
             }
 
@@ -128,8 +129,10 @@ public class AddFlowerActivity extends AppCompatActivity {
     }
 
     private void saveToFirestore(String name, String category, String location, String description, double buyPrice, double sellPrice, double quantity, String imageUrl) {
+        binding.layoutProgress.setVisibility(android.view.View.VISIBLE);
         Flower flower = new Flower(null, imageUrl, name, location, "Bó", quantity, category, buyPrice, sellPrice, description);
         viewModel.addFlower(flower, (success, message) -> {
+            binding.layoutProgress.setVisibility(android.view.View.GONE);
             if (success) {
                 Toast.makeText(AddFlowerActivity.this, "Đã lưu thành công", Toast.LENGTH_SHORT).show();
                 finish();

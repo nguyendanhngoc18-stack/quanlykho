@@ -9,11 +9,13 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/khohoa"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/khohoa"
         android:supportsRtl="true"
-        android:theme="@style/Theme.QuanLyKho" >
+        android:theme="@style/Theme.QuanLyKho"
+        >
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -38,9 +40,21 @@
             android:theme="@style/Theme.QuanLyKho" />
 
         <activity
+            android:name=".ui.inventory.PriceHistoryActivity"
+            android:exported="false"
+            android:label="Lịch sử giá"
+            android:theme="@style/Theme.QuanLyKho" />
+
+        <activity
             android:name=".ui.transactions.CreateInvoiceActivity"
             android:exported="false"
             android:label="Tạo hóa đơn"
+            android:theme="@style/Theme.QuanLyKho" />
+
+        <activity
+            android:name=".ui.transactions.InvoiceDetailActivity"
+            android:exported="false"
+            android:label="Chi tiết hóa đơn"
             android:theme="@style/Theme.QuanLyKho" />
     </application>
 

@@ -61,6 +61,38 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="Trạng thái thanh toán"
+            android:layout_marginTop="12dp"
+            android:textSize="12sp"
+            android:textColor="@color/text_secondary"/>
+
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/togglePaymentStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            app:singleSelection="true"
+            app:selectionRequired="true"
+            app:checkedButton="@+id/btnUnpaid">
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnUnpaid"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Chưa thanh toán" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnPaid"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Đã thanh toán" />
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="Danh sách hoa đã chọn"
             android:textStyle="bold"
             android:layout_marginTop="24dp"

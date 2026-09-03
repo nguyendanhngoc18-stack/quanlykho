@@ -9,16 +9,18 @@ public class Invoice {
     private Double totalAmount;
     private Long timestamp;
     private String type; // "PURCHASE" (Nhập) or "SALE" (Xuất)
+    private boolean isPaid;
 
     public Invoice() {}
 
-    public Invoice(String id, String customerName, List<InvoiceItem> items, Double totalAmount, Long timestamp, String type) {
+    public Invoice(String id, String customerName, List<InvoiceItem> items, Double totalAmount, Long timestamp, String type, boolean isPaid) {
         this.id = id;
         this.customerName = customerName;
         this.items = items;
         this.totalAmount = totalAmount;
         this.timestamp = timestamp;
         this.type = type;
+        this.isPaid = isPaid;
     }
 
     public String getId() { return id; }
@@ -33,4 +35,6 @@ public class Invoice {
     public void setTimestamp(Long timestamp) { this.timestamp = timestamp; }
     public String getType() { return type; }
     public void setType(String type) { this.type = type; }
+    public boolean isPaid() { return isPaid; }
+    public void setPaid(boolean paid) { isPaid = paid; }
 }

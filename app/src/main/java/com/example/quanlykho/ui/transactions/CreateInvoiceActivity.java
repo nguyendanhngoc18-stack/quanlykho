@@ -1,12 +1,15 @@
 package com.example.quanlykho.ui.transactions;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -136,8 +139,19 @@ public class CreateInvoiceActivity extends AppCompatActivity {
             String qtyStr = input.getText().toString();
             if (!qtyStr.isEmpty()) {
                 double qty = Double.parseDouble(qtyStr);
-                if (isSale && qty > (flower.getQuantity() != null ? flower.getQuantity() : 0)) {
-                    Toast.makeText(this, "Không đủ hàng trong kho!", Toast.LENGTH_SHORT).show();
+                
+                // Kiểm tra cộng dồn số lượng nếu đã chọn loại hoa này trước đó
+                double alreadySelectedQty = 0;
+                for (InvoiceItem item : selectedItems) {
+                    if (item.getFlowerId().equals(flower.getId())) {
+                        alreadySelectedQty += item.getQuantity();
+                    }
+                }
+                
+                double totalRequested = alreadySelectedQty + qty;
+                
+                if (isSale && totalRequested > (flower.getQuantity() != null ? flower.getQuantity() : 0)) {
+                    Toast.makeText(this, "Không đủ hàng trong kho! (Đã chọn: " + alreadySelectedQty + ")", Toast.LENGTH_SHORT).show();
                 } else {
                     addItemToInvoice(flower, qty);
                 }
@@ -171,8 +185,40 @@ public class CreateInvoiceActivity extends AppCompatActivity {
             return;
         }
 
+        boolean isPaid = binding.togglePaymentStatus.getCheckedButtonId() == R.id.btnPaid;
+        String statusText = isPaid ? "ĐÃ thanh toán" : "CHƯA thanh toán";
+        
+        AlertDialog confirmDialog = new AlertDialog.Builder(this)
+                .setTitle("Xác nhận tạo hóa đơn")
+                .setMessage("Bạn chắc chắn chứ? Hóa đơn này " + statusText)
+                .setNegativeButton("Hủy", null)
+                .setPositiveButton("OK (5)", (dialog, which) -> executeSaveInvoice(name, isPaid))
+                .create();
+
+        confirmDialog.setOnShowListener(dialog -> {
+            Button okButton = confirmDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+            okButton.setEnabled(false);
+            
+            new CountDownTimer(5000, 1000) {
+                @Override
+                public void onTick(long millisUntilFinished) {
+                    okButton.setText("OK (" + (millisUntilFinished / 1000 + 1) + ")");
+                }
+
+                @Override
+                public void onFinish() {
+                    okButton.setText("OK");
+                    okButton.setEnabled(true);
+                }
+            }.start();
+        });
+
+        confirmDialog.show();
+    }
+
+    private void executeSaveInvoice(String name, boolean isPaid) {
         String type = binding.toggleInvoiceType.getCheckedButtonId() == R.id.btnTypeSale ? "SALE" : "PURCHASE";
-        Invoice invoice = new Invoice(null, name, selectedItems, totalAmount, System.currentTimeMillis(), type);
+        Invoice invoice = new Invoice(null, name, selectedItems, totalAmount, System.currentTimeMillis(), type, isPaid);
         
         viewModel.addInvoice(invoice, (success, message) -> {
             if (success) {

@@ -1,8 +1,11 @@
 package com.example.quanlykho.ui.inventory;
 
+import android.content.Intent;
 import android.app.AlertDialog;
 import android.os.Bundle;
 import android.text.InputType;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -13,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.example.quanlykho.R;
 import com.example.quanlykho.databinding.ActivityDetailBinding;
 import com.example.quanlykho.model.Flower;
+import com.example.quanlykho.model.PriceHistory;
 import com.example.quanlykho.model.Transaction;
 import com.example.quanlykho.viewmodel.FlowerViewModel;
 import com.google.gson.Gson;
@@ -40,8 +44,52 @@ public class DetailActivity extends AppCompatActivity {
             displayFlowerInfo(currentFlower);
         }
 
-        binding.btnImportMore.setOnClickListener(v -> showTransactionDialog("IMPORT"));
-        binding.btnExport.setOnClickListener(v -> showTransactionDialog("EXPORT"));
+        binding.btnEditPrice.setOnClickListener(v -> showEditPriceDialog());
+        binding.btnViewPriceHistory.setOnClickListener(v -> {
+            Intent intent = new Intent(this, PriceHistoryActivity.class);
+            intent.putExtra("flower_id", currentFlower.getId());
+            intent.putExtra("flower_name", currentFlower.getFlowerName());
+            startActivity(intent);
+        });
+    }
+
+    private void showEditPriceDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Sửa giá: " + currentFlower.getFlowerName());
+
+        View view = LayoutInflater.from(this).inflate(R.layout.dialog_edit_price, null);
+        EditText etBuy = view.findViewById(R.id.etEditBuyPrice);
+        EditText etSell = view.findViewById(R.id.etEditSellPrice);
+        EditText etNote = view.findViewById(R.id.etEditPriceNote);
+
+        etBuy.setText(String.valueOf(currentFlower.getBuyPrice()));
+        etSell.setText(String.valueOf(currentFlower.getSellPrice()));
+
+        builder.setView(view);
+        builder.setPositiveButton("Cập nhật", (dialog, which) -> {
+            double newBuy = Double.parseDouble(etBuy.getText().toString());
+            double newSell = Double.parseDouble(etSell.getText().toString());
+            String note = etNote.getText().toString();
+
+            PriceHistory history = new PriceHistory(null, currentFlower.getId(), 
+                    currentFlower.getBuyPrice(), newBuy, 
+                    currentFlower.getSellPrice(), newSell, 
+                    System.currentTimeMillis(), note);
+
+            currentFlower.setBuyPrice(newBuy);
+            currentFlower.setSellPrice(newSell);
+
+            viewModel.updateFlowerPrice(currentFlower, history, (success, message) -> {
+                if (success) {
+                    displayFlowerInfo(currentFlower);
+                    Toast.makeText(this, "Đã cập nhật giá mới", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, "Lỗi: " + message, Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
+        builder.setNegativeButton("Hủy", null);
+        builder.show();
     }
 
     private void setupToolbar() {
@@ -74,53 +122,5 @@ public class DetailActivity extends AppCompatActivity {
                     .centerCrop()
                     .into(binding.ivFlowerDetail);
         }
-    }
-
-    private void showTransactionDialog(String type) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(type.equals("IMPORT") ? "Nhập thêm hàng" : "Xuất kho (Dùng cho hỏng hóc)");
-
-        final EditText input = new EditText(this);
-        input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-        input.setHint("Nhập số lượng");
-        builder.setView(input);
-
-        builder.setPositiveButton("Xác nhận", (dialog, which) -> {
-            String qtyStr = input.getText().toString();
-            if (!qtyStr.isEmpty()) {
-                processTransaction(type, Double.parseDouble(qtyStr));
-            }
-        });
-        builder.setNegativeButton("Hủy", (dialog, which) -> dialog.cancel());
-        builder.show();
-    }
-
-    private void processTransaction(String type, double qty) {
-        double currentQty = currentFlower.getQuantity() != null ? currentFlower.getQuantity() : 0.0;
-        double newQty = type.equals("IMPORT") ? currentQty + qty : currentQty - qty;
-
-        if (newQty < 0) {
-            Toast.makeText(this, "Số lượng xuất vượt quá tồn kho!", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        currentFlower.setQuantity(newQty);
-        viewModel.updateFlower(currentFlower, (success, message) -> {
-            if (success) {
-                Transaction transaction = new Transaction(
-                        null,
-                        currentFlower.getId(),
-                        currentFlower.getFlowerName(),
-                        type,
-                        qty,
-                        System.currentTimeMillis(),
-                        type.equals("IMPORT") ? "Nhập kho bổ sung" : "Xuất kho (Lý do khác)"
-                );
-                viewModel.addTransaction(transaction, (s, m) -> {
-                    displayFlowerInfo(currentFlower);
-                    Toast.makeText(DetailActivity.this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
-                });
-            }
-        });
     }
 }

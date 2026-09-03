@@ -20,6 +20,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import com.google.gson.Gson;
+import android.content.Intent;
+import com.example.quanlykho.ui.transactions.InvoiceDetailActivity;
+
 public class DashboardFragment extends Fragment {
     private FragmentDashboardBinding binding;
     private FlowerViewModel viewModel;
@@ -56,24 +60,29 @@ public class DashboardFragment extends Fragment {
         if (invoices == null) return;
         binding.tvInvoicesCount.setText(String.valueOf(invoices.size()));
         
-        double totalRevenue = 0;
+        double totalRevenue = 0; // SALE
+        double totalExpense = 0; // PURCHASE
+        
         binding.containerRecentInvoices.removeAllViews();
         
         int limit = Math.min(invoices.size(), 5);
         for (int i = 0; i < limit; i++) {
-            Invoice inv = invoices.get(i);
-            totalRevenue += inv.getTotalAmount();
-            addInvoiceToDashboard(inv);
+            addInvoiceToDashboard(invoices.get(i));
         }
         
-        // Show total revenue from recent or all? Let's show total from all invoices
-        double grandTotal = 0;
-        for (Invoice inv : invoices) grandTotal += inv.getTotalAmount();
+        for (Invoice inv : invoices) {
+            if ("SALE".equals(inv.getType())) {
+                totalRevenue += inv.getTotalAmount();
+            } else if ("PURCHASE".equals(inv.getType())) {
+                totalExpense += inv.getTotalAmount();
+            }
+        }
         
-        if (grandTotal >= 1000000) {
-            binding.tvMonthlyRevenue.setText(String.format(Locale.getDefault(), "%.1fM", grandTotal / 1000000.0));
+        // Cập nhật text hiển thị (có thể bạn muốn đổi ID tvMonthlyRevenue thành tvTotalRevenue)
+        if (totalRevenue >= 1000000) {
+            binding.tvMonthlyRevenue.setText(String.format(Locale.getDefault(), "%.1fM", totalRevenue / 1000000.0));
         } else {
-            binding.tvMonthlyRevenue.setText(String.format(Locale.getDefault(), "%.0fK", grandTotal / 1000.0));
+            binding.tvMonthlyRevenue.setText(String.format(Locale.getDefault(), "%,.0f đ", totalRevenue));
         }
     }
 
@@ -86,10 +95,23 @@ public class DashboardFragment extends Fragment {
 
         name.setText(inv.getCustomerName());
         amount.setText(String.format(Locale.getDefault(), "%,.0fđ", inv.getTotalAmount()));
-        type.setText("HĐ");
+        
+        if (inv.isPaid()) {
+            type.setText("ĐÃ TRẢ");
+            type.setTextColor(android.graphics.Color.parseColor("#4CAF50"));
+        } else {
+            type.setText("NỢ");
+            type.setTextColor(android.graphics.Color.parseColor("#FF5252"));
+        }
         
         java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM HH:mm", Locale.getDefault());
         date.setText(sdf.format(new java.util.Date(inv.getTimestamp())));
+        
+        view.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), InvoiceDetailActivity.class);
+            intent.putExtra("invoice_json", new Gson().toJson(inv));
+            startActivity(intent);
+        });
         
         binding.containerRecentInvoices.addView(view);
     }

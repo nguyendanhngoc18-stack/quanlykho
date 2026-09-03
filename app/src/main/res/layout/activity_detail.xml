@@ -153,34 +153,27 @@
                 android:text="Hoa hồng Red Naomi có màu đỏ thẫm quyến rũ, hương thơm nhẹ nhàng và độ bền cao..."
                 android:textSize="14sp"
                 android:layout_marginTop="8dp"
-                android:lineSpacingExtra="4dp"/>
+                android:lineSpacingExtra="4dp"
+                android:layout_marginBottom="16dp"/>
 
-            <LinearLayout
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnEditPrice"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="32dp"
-                android:layout_marginBottom="32dp">
+                android:layout_height="56dp"
+                android:text="Sửa giá hoa"
+                app:icon="@android:drawable/ic_menu_edit"
+                app:cornerRadius="12dp"
+                android:layout_marginBottom="12dp" />
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnExport"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
-                    android:layout_width="0dp"
-                    android:layout_height="56dp"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
-                    android:text="Xuất kho"
-                    app:cornerRadius="12dp"/>
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnImportMore"
-                    android:layout_width="0dp"
-                    android:layout_height="56dp"
-                    android:layout_weight="1"
-                    android:layout_marginStart="8dp"
-                    android:text="Nhập thêm"
-                    app:cornerRadius="12dp"/>
-            </LinearLayout>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnViewPriceHistory"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:text="Lịch sử giá"
+                style="@style/Widget.Material3.Button.TonalButton"
+                app:icon="@android:drawable/ic_menu_recent_history"
+                app:cornerRadius="12dp"
+                android:layout_marginBottom="32dp" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
